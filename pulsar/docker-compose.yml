@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+
+  pulsar:
+    image: apachepulsar/pulsar:2.6.0
+    hostname: pulsar
+    expose:
+      - 6650
+      - 8080
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    environment:
+      VAR: var
+    volumes:
+      - ./data:/pulsar/data
+      - ./config:/pulsar/conf
+    command: bin/pulsar standalone
+
+  pulsar-manager:
+    image: apachepulsar/pulsar-manager:v0.1.0
+    hostname: pulsar-manager
+    expose:
+      - 9527
+    ports:
+      - "9527:9527"
+    environment:
+      REDIRECT_HOST: http://192.168.0.104 
+      REDIRECT_PORT: "9527" 
+      DRIVER_CLASS_NAME: org.postgresql.Driver 
+      URL: 'jdbc:postgresql://127.0.0.1:5432/pulsar_manager' 
+      USERNAME: pulsar 
+      PASSWORD: pulsar 
+      LOG_LEVEL: DEBUG 
+    volumes:
+      - /Users/shaunryan/code/docker-compose/pulsar:/data
+    command: /bin/sh
+
+
+# docker pull apachepulsar/pulsar-manager:v0.1.0 \
+# docker run -it \
+# -p 9527:9527 \
+# -e REDIRECT_HOST=http://192.168.0.104 \
+# -e REDIRECT_PORT=9527 \
+# -e DRIVER_CLASS_NAME=org.postgresql.Driver \
+# -e URL='jdbc:postgresql://127.0.0.1:5432/pulsar_manager' \
+# -e USERNAME=pulsar \
+# -e PASSWORD=pulsar \
+# -e LOG_LEVEL=DEBUG \
+# -v $PWD:/data \
+# apachepulsar/pulsar-manager:v0.1.0 /bin/sh 
+
+# docker run -it \
+#   -p 6650:6650 \
+#   -p 8080:8080 \
+#   --mount source=pulsardata,target=/pulsar/data \
+#   --mount source=pulsarconf,target=/pulsar/conf \
+#   apachepulsar/pulsar:2.6.0 \
+#   bin/pulsar standalone

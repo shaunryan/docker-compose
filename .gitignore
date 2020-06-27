@@ -1,1 +1,4 @@
-/certs/*
+/elasticsearch/certs/*
+/pulsar/config/*
+/pulsar/data/*
+/pulsar/postgresql

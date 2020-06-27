@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+
+  create_esd_certs:
+    container_name: create_esd_certs
+    image: elasticsearch:7.4.2
+    command: >
+      bash -c '
+        
+        yum install unzip -y
+        if [[ ! -f /certs/bundle.zip ]]; then
+
+          bin/elasticsearch-certutil cert --silent --pem --in config/certificates/instances.yml -out /certs/bundle.zip;
+          unzip /certs/bundle.zip -d /certs
+
+        fi;
+        chown -R 1000:0 /certs
+      '
+    user: "0"
+    working_dir: /usr/share/elasticsearch
+    volumes: 
+      - './certs:/certs'
+      - '.:$CERTS_DIR'
+
+  elasticsearch:
+    image: elasticsearch:7.4.2
+    hostname: elasticsearch
+    expose:
+      - 9002
+      - 9003
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    depends_on:
+     - create_esd_certs
+    environment:
+      bootstrap.memory_lock: "true"
+      cluster.name: elasticsearch
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      cluster.routing.allocation.disk.threshold_enabled: "false"
+      xpack.license.self_generated.type: trial 
+      xpack.security.enabled: "true"
+      xpack.security.authc.anonymous.username: _es_anonymous_user
+      xpack.security.authc.anonymous.roles: superuser
+      xpack.security.authc.anonymous.authz_exception: "true"
+      xpack.security.http.ssl.enabled: "true"
+      xpack.security.http.ssl.client_authentication: none
+      xpack.security.http.ssl.key: "$CERTS_DIR/elasticsearch/elasticsearch.key"
+      xpack.security.http.ssl.certificate_authorities: "$CERTS_DIR/ca/ca.crt"
+      xpack.security.http.ssl.certificate: "$CERTS_DIR/elasticsearch/elasticsearch.crt"
+    volumes: ['./certs:$CERTS_DIR', ./:/wff]
+    command: |
+      sh -c '
+        sh /wff/wait-for-file.sh $CERTS_DIR/ca/ca.crt /usr/local/bin/docker-entrypoint.sh
+      '
+    healthcheck:
+      test: curl --cacert $CERTS_DIR/ca/ca.crt -s https://localhost:9200 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
