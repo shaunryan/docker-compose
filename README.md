@@ -18,4 +18,4 @@ Library of docker-compose setups for local development and learning:
 
 ./pulsar/
 
-1. Standalone pulsar with the pulsar management UI
+1. Dagster with cron scheduler and postgres db - todo add celery and queue
