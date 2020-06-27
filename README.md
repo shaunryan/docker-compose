@@ -1,3 +1,5 @@
+# Docker-Compose Library
+
 Library of docker-compose setups for local development and learning:
 
 ## Elasticsearch
