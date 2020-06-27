@@ -16,6 +16,7 @@ Library of docker-compose setups for local development and learning:
 
 ## Dagster
 
-./pulsar/
+./dagster/
 
-1. Dagster with cron scheduler and postgres db - todo add celery and queue
+Dagster with cron scheduler and postgres db - todo add celery and queue.
+Drop your code in the app folder and update the workspace yaml accordingly to point to your pipeline python file.
