@@ -1,0 +1,23 @@
+FROM python:3.7-slim
+
+# Cron is required to use scheduling in Dagster
+RUN apt-get update && apt-get install -yqq cron
+
+RUN mkdir -p /opt/dagster/dagster_home /opt/dagster/app /opt/dagster/cmd
+
+RUN pip install dagster dagit dagster_postgres dagster_cron
+
+# COPY entrypoint.sh /opt/dagster/app/
+COPY entrypoint.sh /opt/dagster/cmd/
+
+# Copy dagster instance YAML to $DAGSTER_HOME
+COPY ./dagster_home/dagster.yaml /opt/dagster/dagster_home/
+COPY ./dagster_home/pipeline_run.yaml /opt/dagster/dagster_home/
+
+RUN chmod +x /opt/dagster/cmd/entrypoint.sh
+
+WORKDIR /opt/dagster/app
+
+EXPOSE 3000
+
+ENTRYPOINT ["/opt/dagster/cmd/entrypoint.sh"]

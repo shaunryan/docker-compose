@@ -13,3 +13,9 @@ Library of docker-compose setups for local development and learning:
 ./pulsar/
 
 1. Standalone pulsar with the pulsar management UI
+
+## Dagster
+
+./pulsar/
+
+1. Standalone pulsar with the pulsar management UI
