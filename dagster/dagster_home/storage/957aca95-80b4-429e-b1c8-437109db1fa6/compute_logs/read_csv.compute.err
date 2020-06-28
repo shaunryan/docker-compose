@@ -1,0 +1,28 @@
+2020-06-28 07:14:04 - dagster - DEBUG - inputs_pipeline - 957aca95-80b4-429e-b1c8-437109db1fa6 - STEP_START - Started execution of step "read_csv.compute".
+dagster/solid_selection = "*"
+               solid = "read_csv"
+    solid_definition = "read_csv"
+            step_key = "read_csv.compute"
+2020-06-28 07:14:04 - dagster - DEBUG - inputs_pipeline - 957aca95-80b4-429e-b1c8-437109db1fa6 - STEP_INPUT - Got input "csv_path" of type "Any". (Type check passed).
+dagster/solid_selection = "*"
+ event_specific_data = {"input_name": "csv_path", "type_check_data": [true, "csv_path", null, []]}
+               solid = "read_csv"
+    solid_definition = "read_csv"
+            step_key = "read_csv.compute"
+2020-06-28 07:14:04 - dagster - INFO - system - 957aca95-80b4-429e-b1c8-437109db1fa6 - Read 77 lines
+dagster/solid_selection = "*"
+               solid = "read_csv"
+    solid_definition = "read_csv"
+            step_key = "read_csv.compute"
+2020-06-28 07:14:04 - dagster - DEBUG - inputs_pipeline - 957aca95-80b4-429e-b1c8-437109db1fa6 - STEP_OUTPUT - Yielded output "result" of type "Any". (Type check passed).
+dagster/solid_selection = "*"
+ event_specific_data = {"intermediate_materialization": null, "step_output_handle": ["read_csv.compute", "result"], "type_check_data": [true, "result", null, []]}
+               solid = "read_csv"
+    solid_definition = "read_csv"
+            step_key = "read_csv.compute"
+2020-06-28 07:14:04 - dagster - DEBUG - inputs_pipeline - 957aca95-80b4-429e-b1c8-437109db1fa6 - STEP_SUCCESS - Finished execution of step "read_csv.compute" in 38ms.
+dagster/solid_selection = "*"
+ event_specific_data = {"duration_ms": 38.7521740003649}
+               solid = "read_csv"
+    solid_definition = "read_csv"
+            step_key = "read_csv.compute"
