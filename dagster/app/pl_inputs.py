@@ -3,9 +3,6 @@ import os
 
 from dagster import execute_pipeline, pipeline, solid
 
-
-
-
 @solid
 def read_csv(context, csv_path):
     csv_path = os.path.join(os.path.dirname(__file__), csv_path)
@@ -14,7 +11,6 @@ def read_csv(context, csv_path):
 
     context.log.info('Read {n_lines} lines'.format(n_lines=len(lines)))
     return lines
-
 
 @solid
 def sort_by_calories(context, cereals):
@@ -35,18 +31,20 @@ def sort_by_calories(context, cereals):
     }
 
 
-run_config = {
-    'solids': {
-        'read_csv': {'inputs': {'csv_path': {'value': 'cereal.csv'}}}
-    }
-}
+
 
 @pipeline
 def inputs_pipeline():
     sort_by_calories(read_csv())
 
-result = execute_pipeline(inputs_pipeline, run_config=run_config)
-assert result.success
+
+# run_config = {
+#     'solids': {
+#         'read_csv': {'inputs': {'csv_path': {'value': './data/cereal.csv'}}}
+#     }
+# }
+# result = execute_pipeline(inputs_pipeline, run_config=run_config)
+# assert result.success
 
 # dagster pipeline execute -f inputs.py -e inputs_env.yaml
 # dagit -f inputs.py

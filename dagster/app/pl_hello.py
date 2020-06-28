@@ -15,5 +15,6 @@ def hello(context, name: str):
 def hello_pipeline():
     hello(get_name())
 
-if __name__ == "__main__":
-    execute_pipeline(hello_pipeline)
+
+# if __name__ == "__main__":
+#     execute_pipeline(hello_pipeline)

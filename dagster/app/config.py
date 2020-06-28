@@ -98,7 +98,6 @@ def read_csv(context, csv_path: str):
 
     return lines
 
-
 @pipeline
 def config_pipeline():
     read_csv()

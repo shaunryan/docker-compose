@@ -3,7 +3,9 @@
 /pulsar/data/*
 /pulsar/postgresql
 /dagster/app/__pycache__
+/dagster/app/data
 /dagster/dagster_home/.logs_queue
 /dagster/dagster_home/.telemetry
 /dagster/dagster_home/logs
 /dagster/dagster_home/storage
+/.DS_Store
