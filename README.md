@@ -18,5 +18,47 @@ Library of docker-compose setups for local development and learning:
 
 ./dagster/
 
-Dagster with cron scheduler and postgres db - todo add celery and queue.
+
+Dagster with:
+* cron scheduler
+* postgres db
+* rabbitMq
+* 1 celery dagster worker
+* dagit
+
+### up & down
+
+### RabbitMq
+
+    http://localhost:15672/
+    username: guest
+    password: guest
+    broker: pyamqp://guest:guest@rabbitmq:5672//
+
+### Dagit
+
+    http://localhost:3000/
+
+### PostGres
+
+    user: dagster
+    password: dagster
+    database: dagster
+    host: localhost
+    Port: 5432
+
+Turn it on:
+```bash
+cd dagster
+docker-compose up
+```
+
+Turn it off:
+```bash
+docker-compose down
+```
+
+
+
+
 Drop your code in the app folder and update the workspace yaml accordingly to point to your pipeline python file.

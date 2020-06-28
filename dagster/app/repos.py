@@ -2,6 +2,7 @@ from dagster import pipeline, repository, solid
 from pl_hello_cereal import hello_cereal_pipeline
 from pl_hello import hello_pipeline
 from pl_inputs import inputs_pipeline
+from pl_celery import parallel_pipeline
 
 
 @repository
@@ -13,6 +14,7 @@ def tutorial_repository():
         'pipelines': {
             'hello_cereal_pipeline': lambda: hello_cereal_pipeline,
             'hello_pipeline': lambda: hello_pipeline,
-            'inputs_pipeline': lambda: inputs_pipeline
+            'inputs_pipeline': lambda: inputs_pipeline,
+            'parallel_pipeline': lambda: parallel_pipeline
         }
     }

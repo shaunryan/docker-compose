@@ -12,12 +12,21 @@
 # - celery (provided by dagster_celery)
 # - celery-k8s (provided by dagster_celery)
 # - dask (provided by dagster_dask)
+# execution:
+#   multiprocess:
+#     config:
+#       # Note that max_concurrent: 0 is equivalent to multiprocessing.cpu_count() - see:
+#       # https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count
+#       max_concurrent: 4
 execution:
-  multiprocess:
-    config:
-      # Note that max_concurrent: 0 is equivalent to multiprocessing.cpu_count() - see:
-      # https://docs.python.org/3/library/multiprocessing.html#multiprocessing.cpu_count
-      max_concurrent: 4
+  celery:
+    config:   
+      broker: 'pyamqp://guest:guest@rabbitmq:5672//'  # Optional[str]: The URL of the Celery broker
+      backend: 'rpc://guest:guest@rabbitmq:5672//' # Optional[str]: The URL of the Celery results backend
+    #   include: ['my_module'] # Optional[List[str]]: Modules every worker should import
+    config_source:
+      broker_transport_options:
+        visibility_timeout: 18000
 
 # ==================================================================================================
 # Storage
@@ -43,6 +52,7 @@ execution:
 # - gcs (provided by dagster_gcp)
 storage:
   filesystem:
+
 
 # ==================================================================================================
 # Loggers

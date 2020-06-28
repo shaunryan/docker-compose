@@ -1,6 +1,26 @@
-version: '3'
+version: '3.7'
 
 services:
+
+  rabbitmq:
+    hostname: rabbitmq
+    image: 'rabbitmq:3.8-management-alpine' 
+    ports:
+      # The standard AMQP protocol port
+      - '5672:5672'
+      # HTTP management UI
+      - '15672:15672'
+    environment:
+      # The location of the RabbitMQ server.  "amqp" is the protocol;
+      # "rabbitmq" is the hostname.  Note that there is not a guarantee
+      # that the server will start first!  Telling the pika client library
+      # to try multiple times gets around this ordering issue.
+      AMQP_URL: 'amqp://rabbitmq?connection_attempts=5&retry_delay=5'
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
+    networks:
+      - dagster
 
   dagster_postgres:
     image: postgres
@@ -12,18 +32,22 @@ services:
       POSTGRES_USER: dagster
       POSTGRES_PASSWORD: dagster
       POSTGRES_DB: dagster
+    networks:
+      - dagster
 
-  dagster_instance:
-    image: dagster_instance
+  dagit:
+    image: dagit
     expose:
       - 3000
     ports:
       - "3000:3000"
     build:
       context: ./
-      dockerfile: dockerfile
+      dockerfile: dockerfile.dagit
     depends_on:
       - dagster_postgres
+      - rabbitmq
+      - dagster_worker1
     environment:
       DAGSTER_PG_USERNAME: dagster
       DAGSTER_PG_PASSWORD: dagster
@@ -32,7 +56,27 @@ services:
     volumes: 
       - './dagster_home:/opt/dagster/dagster_home'
       - './app:/opt/dagster/app'
+    networks:
+      - dagster
 
+  dagster_worker1:
+    image: dagster_worker1
+    build:
+      context: ./
+      dockerfile: dockerfile.dagster
+    depends_on:
+      - dagster_postgres
+      - rabbitmq
+    environment:
+      DAGSTER_PG_USERNAME: dagster
+      DAGSTER_PG_PASSWORD: dagster
+      DAGSTER_PG_HOST: dagster_postgres
+      DAGSTER_PG_DB: dagster
+    volumes: 
+      - './dagster_home:/opt/dagster/dagster_home'
+      - './app:/opt/dagster/app'
+    networks:
+      - dagster
 
 #   Dagit servers expose a health check endpoint at /dagit_info, which returns a JSON response like:
 
@@ -41,3 +85,7 @@ services:
 #   "dagster_graphql_version": "0.6.6",
 #   "dagster_version": "0.6.6"
 # }
+networks:
+  dagster:
+    driver: bridge
+    name: dagster
