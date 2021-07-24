@@ -10,3 +10,4 @@
 /dagster/dagster_home/storage
 /.DS_Store
 /dagster/app/venv
+/mlflow/mlflowdb/*
