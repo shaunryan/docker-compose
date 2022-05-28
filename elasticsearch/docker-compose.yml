@@ -27,8 +27,8 @@ services:
     image: elasticsearch:7.4.2
     hostname: elasticsearch
     expose:
-      - 9002
-      - 9003
+      - 9200
+      - 9300
     ports:
       - "9200:9200"
       - "9300:9300"
